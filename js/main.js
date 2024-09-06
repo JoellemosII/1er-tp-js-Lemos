@@ -1,90 +1,77 @@
-const menuPrincipal= "Elija una opcion:\n 1: Comprar Zapas.\n 2: Finalizar Compra.\n 3: Terminar ";
-const menuSecundary = "Elija una opción:\n 1: Finalizar Compra.\n 2: Ver Precios.\n 3: Volver a elegir";
-let calzado = "1: Zapas Adiddas. \n 2: Zapas Nike. \n 3: Zapas Puma.\n 4: Zapas Lady Stork Man."
 alert(" Hola y bienvenido a ZapasWord");
-function solicitarNombre(){
-    let nombreUsuario = prompt("Ingresa tu nombre para continuar");
-    alert("Gracias Por ingresar a ZapasWord " + (nombreUsuario));
-}
+    function solicitarNombre() {
+        let nombreUsuario = prompt("Ingresa tu nombre para continuar");
+        if (nombreUsuario === "" || !isNaN(nombreUsuario)) {
+            alert("Este dato no es correcto, por favor ingrese de nuevo");
+            solicitarNombre(); 
+        } else {
+            alert("Gracias por ingresar a ZapasWord " + nombreUsuario);
+        }
+    }   
 solicitarNombre();
-function mostrarMenuPrincipal(){
-    let opcion = Number(prompt(menuPrincipal));
-    while(opcion !==3){
-        if (opcion === 1) {
-            alert("Exelente decision , Te espero en la tienda.");
-        comprarZapas();
-        } if (opcion === 2) {
-            alert("Solo te queda pagar y listo");
-        finalizarCompra();
-        } if (opcion === 3) {
-            alert("Gracias por visitar ZapasWord!");
-    } opcion = 3
-}} 
-mostrarMenuPrincipal();
-function menuSecond() {
-    let opcion;
-    do {
-        opcion = Number(prompt(menuSecundary));
-        if (opcion === 1) {
-            finalizarCompra();
-        } else if (opcion === 2) {
-            preciosZapas();
-        } else if (opcion === 3) {
-            mostrarMenuPrincipal();
-        } else {
-            alert("Opción no válida, por favor elija una opción válida.");
-        }
-    } while(opcion !== 3);
-}
-function comprarZapas() {
-    let calzado = Number(prompt("Selecciona las zapas con más onda para vos \n 1: Zapas Adidas. \n 2: Zapas Nike. \n 3: Zapas Puma. \n 4: Zapas Lady Stork Man."));
-    while (calzado > 4 || calzado < 1) {
-        alert("Dato ingresado no es válido, por favor ingrese un dato válido para continuar. ¡Muchas Gracias! Atte: ZapasWord");
-        calzado = Number(prompt("Selecciona las zapas con más onda para vos \n 1: Zapas Adidas. \n 2: Zapas Nike. \n 3: Zapas Puma. \n 4: Zapas Lady Stork Man."));
-    }
-    if (calzado === 1) {
-        alert("Excelente decisión, elegiste Adidas");
-    } else if (calzado === 2) {
-        alert("Elegiste Nike, yo hubiera elegido las mismas");
-    } else if (calzado === 3) {
-        alert("Elegiste Puma, ¡sos todo un atleta!");
-    } else if (calzado === 4) {
-        alert("Tienes mucha clase, elegiste Lady Stork Man");
-    }
-    preciosZapas();
-}
-function finalizarCompra() {
-    let direccion = prompt("Ingrese su dirección de entrega:");
-    alert("Gracias por confiar en nosotros, Te esperamos de nuevo \n Atte: ZapasWord");
-    alert("El producto va a llegar en 48 hs a " + (direccion) + " " + "Muchas Gracias");
-}
-function preciosZapas() {
-    let adidasZapas = 178594;
-    let nikeZapas = 194587;
-    let pumaZapas = 189420;
-    let storkZapas = 210500;
-    let iva = 1.25;
-    let totalAdidas = (adidasZapas * iva);
-    let totalNike = (nikeZapas * iva);
-    let totalPuma = (pumaZapas * iva);
-    let totalStork = (storkZapas * iva);
-    let calzado;
-    do {
-        calzado = Number(prompt("Selecciona el precio de las zapas\n 1: Zapas Adidas. \n 2: Zapas Nike. \n 3: Zapas Puma. \n 4: Zapas Lady Stork Man."));
-        if (calzado === 1) {
-            alert("Tus zapas valen $" + totalAdidas);
-        } else if (calzado === 2) {
-            alert("Tus zapas valen $" + totalNike);
-        } else if (calzado === 3) {
-            alert("Tus zapas valen $" + totalPuma);
-        } else if (calzado === 4) {
-            alert("Tus zapas valen $" + totalStork);
-        } else {
-            alert("Opción no válida, por favor elija una opción válida.");
-        }
-    } while (calzado < 1 || calzado > 4);
+
+class Producto {
+  constructor(marca, modelo, precio) {
+    this.marca = marca;
+    this.modelo = modelo;
+    this.precio = precio;
+  }
 }
 
+const productos = [
+  new Producto("Adidas", "Super All Star", 50000),
+  new Producto("Adidas", "Ultraboost", 35000),
+  new Producto("Nike", "Air Jordan", 80000),
+  new Producto("Nike", "Nike Air Max", 120000),
+  new Producto("Puma", "Puma Fourms", 15008),
+  new Producto("Puma", "Puma RS-X", 10008)
+];
 
+let carrito = [];
+const IVA = 0.21;
 
+function mostrarProductos() {
+  let mensaje = "Selecciona un producto:\n";
+  productos.forEach((producto, index) => {
+    mensaje += `${index + 1}. ${producto.marca} ${producto.modelo} - $${producto.precio}\n`;
+  });
+  return mensaje;
+}
 
+function agregarProductoAlCarrito() {
+  let seleccion = parseInt(prompt(mostrarProductos())) - 1;
+  if (seleccion >= 0 && seleccion < productos.length) {
+    carrito.push(productos[seleccion]);
+    alert(`Has agregado ${productos[seleccion].marca} ${productos[seleccion].modelo} al carrito.`);
+  } else {
+    alert("Selección inválida. Por favor, intenta de nuevo.");
+    agregarProductoAlCarrito();
+  }
+}
+
+function calcularTotal() {
+  let total = carrito.reduce((sum, producto) => sum + producto.precio, 0);
+  let totalConIva = total * (1 + IVA);
+  return totalConIva.toFixed(2);
+}
+
+function confirmarCompra() {
+  if (carrito.length === 0) {
+    alert("Tu carrito está vacío. Agrega productos antes de confirmar la compra.");
+    return;
+  }
+  let totalConIva = calcularTotal();
+  alert(`El total de tu compra es: $${totalConIva}`);
+  alert("Gracias por comprar en ZapasWord. ¡Vuelve pronto!");
+}
+
+function iniciarCompra() {
+  let continuar = true;
+  while (continuar) {
+    agregarProductoAlCarrito();
+    continuar = confirm("¿Deseas agregar otro producto?");
+  }
+  confirmarCompra();
+}
+
+iniciarCompra();
